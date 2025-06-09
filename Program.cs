@@ -4,16 +4,9 @@
     {
         static void Main(string[] args)
         {
-            var cmp1 = new ComplexNumber(1, 2);
-            var cmp2 = new ComplexNumber(1, 2);
-
-            var cmp3 = cmp1 + cmp2;
-            Console.WriteLine(cmp3);
+            var car = new Car("WV", "Passat", 2000, 0);
+            Console.WriteLine(car.GetAge);
         }
 
-        static void DisplayAnimalSound(Animal animal)
-        {
-            animal.MakeSound();
-        }
     }
 }
