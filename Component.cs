@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp1
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace ConsoleApp1
 {
     interface IRender
     {
@@ -7,7 +9,17 @@
 
     class Coordinate
     {
-        public int X { get; set; }
+        private int x;
+        public int X
+        {
+            get => x == 0 ? -1 : x;
+            set
+            {
+                x = value;
+            }
+        }
+
+        private int y;
         public int Y { get; set; }
     }
     abstract class Component
@@ -23,12 +35,26 @@
             };
         }
 
+        protected Component(int x, int y, int z)
+        {
+            Position = new Coordinate
+            {
+                X = x,
+                Y = y
+            };
+        }
+
+        protected Component(int x)
+        {
+
+        }
+
         public abstract void Move(int x, int y);
     }
 
     class Button : Component, IRender
     {
-        public Button(int x, int y) : base(x, y)
+        public Button(int x, int y, int z) : base(x)
         {
         }
 

@@ -1,1 +1,6 @@
-FirstText
+13.06.2025 20:02:29: INFO: Manager received payment for processing!
+13.06.2025 20:02:30: INFO: Manager processed the payment!
+13.06.2025 20:02:30: INFO: Manager received payment for display!
+13.06.2025 20:02:30: INFO: Manager received payment for processing!
+13.06.2025 20:02:30: ERROR: Bad error
+13.06.2025 20:02:30: INFO: Manager received payment for display!
