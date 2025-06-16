@@ -5,9 +5,9 @@ namespace ConsoleApp1.Payment
 {
     public class PaymentManager
     {
-        private readonly ILogger logger;
+        private readonly ILogger<string> logger;
 
-        public PaymentManager(ILogger logger)
+        public PaymentManager(ILogger<string> logger)
         {
             this.logger = logger;
         }

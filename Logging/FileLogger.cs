@@ -1,8 +1,21 @@
-﻿using System.Runtime.Serialization.Formatters;
-
-namespace ConsoleApp1.Logging
+﻿namespace ConsoleApp1.Logging
 {
-    public class FileLogger : ILogger
+
+    //public abstract class Logger : ILogger
+    //{
+    //    public abstract void LogError(string message);
+
+    //    public void LogInformation(string message)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void LogWarning(string message)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+    public class FileLogger : ILogger<string>
     {
         private readonly string filePath;
 

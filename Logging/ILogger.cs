@@ -1,9 +1,9 @@
 ﻿namespace ConsoleApp1.Logging
 {
-    public interface ILogger
+    public interface ILogger<T>
     {
-        void LogInformation(string message);
-        void LogWarning(string message);
-        void LogError(string message);
+        void LogInformation(T message);
+        void LogWarning(T message);
+        void LogError(T message);
     }
 }

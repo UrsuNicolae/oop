@@ -1,18 +1,18 @@
 ﻿namespace ConsoleApp1.Logging
 {
-    public class ConsoleLogger : ILogger
+    public class ConsoleLogger<T> : ILogger<T>
     {
-        public void LogError(string message)
+        public void LogError(T message)
         {
             Console.WriteLine($"ERROR: {message}");
         }
 
-        public void LogInformation(string message)
+        public void LogInformation(T message)
         {
             Console.WriteLine($"INFO: {message}");
         }
 
-        public void LogWarning(string message)
+        public void LogWarning(T message)
         {
             Console.WriteLine($"WARNING: {message}");
         }
