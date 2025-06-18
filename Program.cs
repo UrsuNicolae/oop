@@ -4,6 +4,8 @@ using ConsoleApp1.Events;
 using ConsoleApp1.Examples;
 using ConsoleApp1.Logging;
 using ConsoleApp1.Packages;
+using ConsoleApp1.Sorting;
+using System.Collections;
 using System.Linq.Expressions;
 
 namespace ConsoleApp1
@@ -12,22 +14,24 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            var artist1 = new SoloMusician("Jhon", "pop", "guitar");
-            var artist2 = new Band("The 5", "Rock", 5);
-            var artist3 = new DJ("DJ max", "Electro", "House");
+            var binTree = new BinarySearchTree<int>();
+            binTree.Insert(5);
+            binTree.Insert(2);
+            binTree.Insert(7);
+            binTree.Insert(10);
 
-            var event1 = new MainConcert("MainStage", DateTime.Parse("2025-08-16"), artist1);
-            var event2 = new AcusticSession("Acusting Room", DateTime.Parse("2025-09-16"), artist2);
-            var event3 = new AfterParty("In The Club", DateTime.Parse("2025-08-16"), artist3);
-
-            event1.DisplayDetails();
-            event2.DisplayDetails();
-            event3.DisplayDetails();
+            Console.WriteLine("Searching the tree!");
+            Console.WriteLine($"Search for 5: {binTree.Search(5)}");
+            Console.WriteLine($"Search for 8: {binTree.Search(8)}");
         }
 
-        static void AfiseazaDetalii(Eveniment eveniment)
+        static void DisplayGenericArray<T>(T[] arr)
         {
-            eveniment.DisplayDetails();  
+            foreach (var i in arr)
+            {
+                Console.Write(i + " ");
+            }
+            Console.WriteLine();
         }
 
         static void RenderUI(List<IRender> renders)
