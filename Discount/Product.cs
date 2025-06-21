@@ -7,6 +7,16 @@
         public decimal Price { get; set; }
         public bool IsDiscounted { get; set; }
         public double DiscounatRate { get; set; }
+        public double DiscountRate { get; }
+        public string Category { get; set; }
+        public Product(string name, decimal price, bool isDiscounted, double discountRate, string category)
+        {
+            Name = name;
+            Price = price;
+            IsDiscounted = isDiscounted;
+            DiscountRate = discountRate;
+            Category = category;
+        }
 
 
         public void ApplyDiscount(double discountRate)
@@ -34,7 +44,7 @@
 
         public override string ToString()
         {
-            return $"{Name}: {Price:C} \n Old:{OldPrice??Price:c}";
+            return $"{Name}: {Price:C}";
         }
     }
 }

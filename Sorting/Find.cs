@@ -6,5 +6,10 @@
         {
             return list.FirstOrDefault(predicat);
         }
+
+        public static IEnumerable<T> GetByCategory<T>(List<T> list, Func<T, bool> predicat)
+        {
+            return list.Where(predicat);
+        }
     }
 }
