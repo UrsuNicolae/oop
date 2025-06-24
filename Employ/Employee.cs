@@ -1,13 +1,19 @@
 ﻿namespace ConsoleApp1.Employ
 {
-    abstract class Employee : IEmploy
+    public class ShortDescriptionEmployee
+    {
+        public string Name { get; set; }
+        public double Sallary { get; set; }
+    }
+
+    public class Employee : IEmploy
     {
         private readonly string name;
         private readonly int id;
         private readonly double sallary;
 
         private static int StaticId = 1;
-        protected Employee(string name, double sallary)
+        public Employee(string name, double sallary)
         {
             this.name = name;
             this.id = StaticId++;
@@ -24,8 +30,8 @@
             Console.WriteLine($"Name: {name} Sallary: {sallary} ID: {id}");
         }
 
-        public abstract void TakeBreak();
+        public virtual void TakeBreak() { }
 
-        public abstract void Work();
+        public virtual void Work() { }
     }
 }
