@@ -4,13 +4,13 @@ namespace ConsoleApp1.Linq
 {
     public static class Extensions
     {
-        public static List<ShortDescriptionEmployee> FilterEmployesBySallary(this List<Employee> employees)
-        {
-            var result = employees.Where(e => e.Sallary > 50000)
-                .OrderBy(e => e.Name)
-                .Select(e => new ShortDescriptionEmployee { Name = e.Name, Sallary = e.Sallary });
-            return result.ToList();
-        }
+        //public static List<ShortDescriptionEmployee> FilterEmployesBySallary(this List<Employee> employees)
+        //{
+        //    var result = employees.Where(e => e.Sallary > 50000)
+        //        .OrderBy(e => e.Name)
+        //        .Select(e => new ShortDescriptionEmployee { Name = e.Name, Sallary = e.Sallary });
+        //    return result.ToList();
+        //}
 
         public static List<OrderTotal> CalcuateOrderToatl (this List<Order> orders)
         {

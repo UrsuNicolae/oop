@@ -7,6 +7,7 @@ using ConsoleApp1.Linq;
 using ConsoleApp1.Lists;
 using ConsoleApp1.Logging;
 using ConsoleApp1.Packages;
+using ConsoleApp1.SOLID;
 using ConsoleApp1.Sorting;
 using System.Collections;
 using System.Data.SqlTypes;
@@ -56,9 +57,14 @@ namespace ConsoleApp1
 
         static void Main(string[] args)
         {
-
-           
-
+            var reportRepo = new ReportRepository();
+            var pdfReport = new Report
+            {
+                Title = "tEST",
+                Content = "Test content"
+            };
+            reportRepo.Save(pdfReport);
+            reportRepo.Generate(pdfReport, new PdfReportGenerator());
         }
 
         
