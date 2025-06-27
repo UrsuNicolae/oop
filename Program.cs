@@ -8,6 +8,7 @@ using ConsoleApp1.Lists;
 using ConsoleApp1.Logging;
 using ConsoleApp1.Packages;
 using ConsoleApp1.SOLID;
+using ConsoleApp1.SOLID.OrderProcesing;
 using ConsoleApp1.Sorting;
 using System.Collections;
 using System.Data.SqlTypes;
@@ -41,30 +42,22 @@ namespace ConsoleApp1
 
     internal class Program
     {
-        class Test
-        {
-            public int Prop1 { get; set; }
-
-            public List<Test2> Test2Values { get; set; }
-        }
-
-        class Test2
-        {
-            public int Prop2 { get; set; }
-        }
-
-
-
         static void Main(string[] args)
         {
-            var reportRepo = new ReportRepository();
-            var pdfReport = new Report
+            var order = new SOLID.OrderProcesing.Order
             {
-                Title = "tEST",
-                Content = "Test content"
+                OrderId = 1,
+                OrderAmount = 29,
+                CustomerName = "Nicolae"
             };
-            reportRepo.Save(pdfReport);
-            reportRepo.Generate(pdfReport, new PdfReportGenerator());
+
+            var validator = new OrderValidator();
+            var procesor = new OrderPyamentProcessor();
+            var notification = new OrderNotificationSerive();
+            var invoice = new InvoiceGenerator();
+
+            var orderManger = new OrderManager(validator, procesor, notification, invoice);
+            orderManger.HandleOrder(order);
         }
 
         
