@@ -1,4 +1,4 @@
-using ConsoleApp1.UTs;
+using TestingProject.UTs;
 
 namespace TestProject1
 {

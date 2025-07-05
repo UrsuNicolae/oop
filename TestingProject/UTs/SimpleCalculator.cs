@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1.UTs
+﻿namespace TestingProject.UTs
 {
     public class SimpleCalculator
     {
