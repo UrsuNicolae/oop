@@ -19,12 +19,12 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<WeatherForecast> Get()
+    public IEnumerable<WeatherForecast1> Get()
     {
         var index = 0;
         return Summaries.Select(weather =>
         {
-            var res = new WeatherForecast
+            var res = new WeatherForecast1
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                 TemperatureC = Random.Shared.Next(-20, 55),
@@ -38,14 +38,14 @@ public class WeatherForecastController : ControllerBase
 
 
     [HttpPost]
-    public IActionResult Add(string weather)
+    public string Add(string weather)
     {
         if (Summaries.Contains(weather))
         {
-            return Ok("Created");
+            return "Created";
         }
         Summaries.Add(weather);
-        return Ok(weather);
+        return weather;
     }
 
     [HttpDelete("{weather}")]
@@ -69,7 +69,7 @@ public class WeatherForecastController : ControllerBase
         var index = 0;
         var summaries = Summaries.Select(weather =>
         {
-            var res = new WeatherForecast
+            var res = new WeatherForecast1
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                 TemperatureC = Random.Shared.Next(-20, 55),
