@@ -1,7 +1,5 @@
-
-using System.Threading.Tasks;
 using WebApplicationDEMO.Middlewares;
-using WebApplicationDEMO.Repositories;
+using WebApplicationDEMO.Infrastructure.Extensions;
 
 namespace WebApplicationDEMO
 {
@@ -16,7 +14,7 @@ namespace WebApplicationDEMO
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.RegisterRepositories();
 
             var app = builder.Build();
 
@@ -28,7 +26,7 @@ namespace WebApplicationDEMO
             }
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-            app.UseMiddleware<RequestResponseLogginMiddleware>();
+            app.UseMiddleware<RequestResponseLogginMiddleware>();           
             //app.UseMiddleware<HeaderCheckMiddleware>("test");
             app.UseHttpsRedirection();
             app.UseAuthorization();

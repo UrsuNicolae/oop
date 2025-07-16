@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplicationDEMO.DTOs
+namespace WebApplicationDEMO.Application.DTOs
 {
     public class ProductDto
     {

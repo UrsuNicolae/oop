@@ -1,44 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApplicationDEMO.DTOs;
-using WebApplicationDEMO.Repositories;
+using WebApplicationDEMO.Application.Interfaces;
+using WebApplicationDEMO.Application.DTOs;
+using WebApplicationDEMO.Application.Mapping;
+using WebApplicationDEMO.Domain.Common;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebApplicationDEMO.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly IMemoryCache _cache;
         private readonly IProductRepository _productRepository;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(
+            IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok(_productRepository.GetById(id));
+            return Ok(ProductMappingProfile.MapToDto(_productRepository.GetById(id)));
         }
 
         [HttpGet]
-        public IActionResult GetProducts()
+        public IActionResult GetProducts(int page, int pageSize)
         {
-            return Ok(_productRepository.GetAll());
+            var paginatedResult = _productRepository.GetAll(page, pageSize);
+            var productsDtos = paginatedResult.Items.Select(ProductMappingProfile.MapToDto).ToList();
+            return Ok(new PaginatedList<ProductDto>(productsDtos, page, paginatedResult.TotalPages));
         }
 
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductDto product)
         {
-
-            _productRepository.Create(product);
-            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+            var productToCreate = ProductMappingProfile.MapToProduct(product);
+            _productRepository.Create(productToCreate);
+            return CreatedAtAction(nameof(GetById), new { id = productToCreate.Id }, productToCreate);
         }
 
         [HttpPut]
         public IActionResult UpdateProduct(ProductDto product)
         {
-            _productRepository.Update(product);
+            _productRepository.Update(ProductMappingProfile.MapToProduct(product));
 
             return Ok("Updated!");
         }
