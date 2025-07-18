@@ -15,6 +15,7 @@ namespace WebApplicationDEMO
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.RegisterRepositories();
+            builder.Services.ConfigureDbContext(builder.Configuration);
 
             var app = builder.Build();
 
