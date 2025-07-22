@@ -5,12 +5,12 @@ namespace WebApplicationDEMO.Application.Interfaces
 {
     public interface IProductRepository
     {
-        public Product GetById(int id);
-        public PaginatedList<Product> GetAll(int page, int pageSize);
-        public void DeleteById(int id);
+        public Task<Product> GetById(int id);
+        public Task<PaginatedList<Product>> GetAll(int page, int pageSize);
+        public Task DeleteById(int id);
 
-        public void Update(Product product);
+        public Task Update(Product product);
 
-        public void Create(Product product);
+        public Task Create(Product product);
     }
 }

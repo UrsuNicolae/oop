@@ -1,101 +1,96 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Memory;
 using WebApplicationDEMO.Application.Interfaces;
 using WebApplicationDEMO.Domain.Common;
 using WebApplicationDEMO.Domain.Entities;
+using WebApplicationDEMO.Infrastructure.Data;
 
 namespace WebApplicationDEMO.Infrastructure.Persistance
 {
     public class ProductRepository : IProductRepository
     {
-        private const string KEY = "products";
-        private static List<Product> _products = new()
-        {
-            new(){Id = 1, Name = "Test1"},
-            new(){Id = 2, Name = "Test2"},
-            new(){Id = 3, Name = "Test3"}
-        };
+        private string KEY = "PRODUCT_{0}";
         private readonly IMemoryCache _cache;
+        private readonly AppDbContext _appDbContext;
 
-        public ProductRepository(IMemoryCache cache)
+        public ProductRepository(AppDbContext appDbContext, IMemoryCache cache)
         {
+            _appDbContext = appDbContext;
             _cache = cache;
-            _cache.Set(KEY, _products, TimeSpan.FromMinutes(1));
         }
 
-        public void Create(Product product)
+        public async Task Create(Product product)
         {
-            if (!_cache.TryGetValue(KEY, out List<Product> productSource))
-            {
-                productSource = _products;
-            }
-            var productWithSameName = productSource.FirstOrDefault(p => p.Name == product.Name);
-            if (productWithSameName != null)
-            {
-                throw new KeyNotFoundException("Product with this name already exists!");
-            }
-            product.Id = productSource.Count();
-            productSource.Add(product);
-            _cache.Set(KEY, productSource);
+            await _appDbContext.Products.AddAsync(product);
+            await _appDbContext.SaveChangesAsync();
+            _cache.Set(string.Format(KEY, product.Id), product);
         }
 
-        public void DeleteById(int id)
+        public async Task DeleteById(int id)
         {
-            if (!_cache.TryGetValue(KEY, out List<Product> productSource))
+            var key = string.Format(KEY, id);
+            if (!_cache.TryGetValue(key, out Product? product))
             {
-                productSource = _products;
+                product = await _appDbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
             }
-            var existingProduct = productSource.FirstOrDefault(p => p.Id == id);
-            if (existingProduct == null)
+
+            if(product == null)
             {
-                throw new KeyNotFoundException("Product not found!");
+                throw new KeyNotFoundException($"Product with id: {id} not foun!");
             }
-            productSource.Remove(existingProduct);
-            _cache.Set(KEY, productSource);
+
+            try
+            {
+                _appDbContext.Products.Remove(product);
+                await _appDbContext.SaveChangesAsync();
+                if(_cache.TryGetValue(key, out var prodFromCache))
+                {
+                    _cache.Remove(key);
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
-        public PaginatedList<Product> GetAll(int page, int pageSize)
+        public async Task<PaginatedList<Product>> GetAll(int page, int pageSize)
         {
-            if (!_cache.TryGetValue(KEY, out List<Product> productSource))
+            var totalCount = await _appDbContext.Products.CountAsync();
+
+            if(totalCount == 0)
             {
-                productSource = _products;
+                return new PaginatedList<Product>(new(), page, totalCount);
             }
-            var products = productSource
-                                .OrderBy(p => p.Id)
+
+            var products = await _appDbContext.Products
+                                .AsNoTracking()
                                 .Skip((page - 1) * pageSize)
                                 .Take(pageSize)
-                                .ToList();
-            var totalPages = (int)Math.Ceiling(productSource.Count() / (double)pageSize);
-            return new PaginatedList<Product>(products, page, totalPages);
+                                .ToListAsync();
+            return new PaginatedList<Product>(products, page, (int)Math.Ceiling(totalCount / (double)pageSize));
         }
 
-        public Product GetById(int id)
+        public async Task<Product> GetById(int id)
         {
-            if (!_cache.TryGetValue(KEY, out List<Product> productSource))
+            if (!_cache.TryGetValue(string.Format(KEY, id), out Product? product))
             {
-                productSource = _products;
+                product = await _appDbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
             }
-            var existingProduct = productSource.FirstOrDefault(p => p.Id == id);
-            if (existingProduct == null)
+
+            if (product == null)
             {
-                throw new KeyNotFoundException("Product not found!");
+                throw new KeyNotFoundException($"Product with id: {id} not foun!");
             }
-            return existingProduct;
+
+            return product;
         }
 
-        public void Update(Product product)
+        public async Task Update(Product product)
         {
-            if (!_cache.TryGetValue(KEY, out List<Product> productSource))
-            {
-                productSource = _products;
-            }
-            var existingProduct = productSource.FirstOrDefault(p => p.Id == product.Id);
-            if (existingProduct == null)
-            {
-                throw new KeyNotFoundException("Product not found!");
-            }
-            existingProduct.Name = product.Name;
-            _cache.Set(KEY, productSource);
+            _appDbContext.Products.Update(product);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

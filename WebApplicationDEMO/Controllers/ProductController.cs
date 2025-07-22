@@ -22,39 +22,39 @@ namespace WebApplicationDEMO.Controllers
 
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return Ok(ProductMappingProfile.MapToDto(_productRepository.GetById(id)));
+            return Ok(ProductMappingProfile.MapToDto(await _productRepository.GetById(id)));
         }
 
         [HttpGet]
-        public IActionResult GetProducts(int page, int pageSize)
+        public async Task<IActionResult> GetProducts(int page, int pageSize)
         {
-            var paginatedResult = _productRepository.GetAll(page, pageSize);
+            var paginatedResult = await _productRepository.GetAll(page, pageSize);
             var productsDtos = paginatedResult.Items.Select(ProductMappingProfile.MapToDto).ToList();
             return Ok(new PaginatedList<ProductDto>(productsDtos, page, paginatedResult.TotalPages));
         }
 
         [HttpPost]
-        public IActionResult CreateProduct([FromBody] ProductDto product)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductDto product)
         {
             var productToCreate = ProductMappingProfile.MapToProduct(product);
-            _productRepository.Create(productToCreate);
+            await _productRepository.Create(productToCreate);
             return CreatedAtAction(nameof(GetById), new { id = productToCreate.Id }, productToCreate);
         }
 
         [HttpPut]
-        public IActionResult UpdateProduct(ProductDto product)
+        public async Task<IActionResult> UpdateProduct(ProductDto product)
         {
-            _productRepository.Update(ProductMappingProfile.MapToProduct(product));
+            await _productRepository.Update(ProductMappingProfile.MapToProduct(product));
 
             return Ok("Updated!");
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteById(int id)
+        public async Task<IActionResult> DeleteById(int id)
         {
-            _productRepository.DeleteById(id);
+            await _productRepository.DeleteById(id);
             return Ok("Delete!");
         }
     }
